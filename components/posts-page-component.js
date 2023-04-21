@@ -6,6 +6,7 @@ export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
+  
   const postsHtml = posts.map((post) => {
     return `
         <li class="post">
