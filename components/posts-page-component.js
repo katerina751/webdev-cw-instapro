@@ -6,7 +6,9 @@ export function renderPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
-  
+
+  // ${post.likes.map((like)=>{return like.name}).pop()}
+
   const postsHtml = posts.map((post) => {
     return `
         <li class="post">
@@ -22,7 +24,7 @@ export function renderPostsPageComponent({ appEl }) {
             ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
             </button>
             <p class="post-likes-text">
-              Нравится: <strong>${post.likes} ${post.likes.length > 1 ? "и еще " + (post.likes.length - 1) : "0"}</strong>
+              Нравится: <strong> ${post.likes.length > 1 ? post.likes.map((like)=>{return like.name}).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like)=>{return like.name}).pop() : "0"}</strong>
             </p>
           </div>
           <p class="post-text">
