@@ -2,11 +2,11 @@ import { getPosts } from "./api.js";
 import { renderAddPostPageComponent } from "./components/add-post-page-component.js";
 import { renderAuthPageComponent } from "./components/auth-page-component.js";
 import {
-  ADD_POSTS_PAGE,
-  AUTH_PAGE,
-  LOADING_PAGE,
-  POSTS_PAGE,
-  USER_POSTS_PAGE,
+  ADD_POSTS_PAGE, //страница добавления поста, ДОРАБОТАТЬ
+  AUTH_PAGE, //страница авторизации
+  LOADING_PAGE, //страница с загрузкой
+  POSTS_PAGE, //страница с постами
+  USER_POSTS_PAGE, //страница с постами конкретного пользователя, ДОРАБОТАТЬ
 } from "./routes.js";
 import { renderPostsPageComponent } from "./components/posts-page-component.js";
 import { renderLoadingPageComponent } from "./components/loading-page-component.js";
@@ -32,7 +32,8 @@ export const logout = () => {
 };
 
 /**
- * Включает страницу приложения
+ * Включает страницу приложения 
+ * с нее начинается работа приложения
  */
 export const goToPage = (newPage, data) => {
   if (
@@ -83,6 +84,7 @@ export const goToPage = (newPage, data) => {
   throw new Error("страницы не существует");
 };
 
+// отрисовывает посты
 const renderApp = () => {
   const appEl = document.getElementById("app");
   if (page === LOADING_PAGE) {
@@ -130,4 +132,5 @@ const renderApp = () => {
   }
 };
 
+// вызов-функция
 goToPage(POSTS_PAGE);
