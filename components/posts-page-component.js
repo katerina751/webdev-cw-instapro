@@ -4,6 +4,9 @@ import { goToPage, getToken } from "../index.js";
 import { addLike, deleteLike } from "../api.js";
 import { user } from "../index.js"
 
+import { formatDistanceToNow } from "date-fns";
+import { ru } from "date-fns/locale";
+
 export function renderPostsPageComponent({ appEl, posts }) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
@@ -33,7 +36,10 @@ export function renderPostsPageComponent({ appEl, posts }) {
             ${post.description}
           </p>
           <p class="post-date">
-          ${post.createdAt} минут назад
+                ${formatDistanceToNow(new Date(post.createdAt), {
+                  locale: ru,
+                  addSuffix: true,
+                })}
           </p>
         </li>`;
   })
