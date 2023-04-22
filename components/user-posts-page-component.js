@@ -1,6 +1,5 @@
-import { POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage, getToken } from "../index.js";
+import { posts, getToken } from "../index.js";
 import { addLike, deleteLike } from "../api.js";
 import { user } from "../index.js"
 
@@ -60,14 +59,6 @@ export function renderUserPostsPageComponent({ appEl }) {
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
   });
-
-  // for (let user of document.querySelectorAll(".post-user-header")) {
-  //   user.addEventListener("click", () => {
-  //     goToPage(POSTS_PAGE, {
-  //       userId: user.dataset.userId,
-  //     });
-  //   });
-  // }
 
 
   // оживляем лайки
