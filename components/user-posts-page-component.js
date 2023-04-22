@@ -2,18 +2,20 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 
-export function renderPostsPageComponent({ appEl }) {
+export function renderUserPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
+  
 
+  const postsUserHeaderHtml = posts.map((post) => {
+    return `
+              <img src="${post.user.imageUrl}" class="posts-user-header__user-image">
+              <p class="posts-user-header__user-name">${post.user.name}</p>`;
+  }).pop();
 
   const postsHtml = posts.map((post) => {
     return `
         <li class="post">
-          <div class="post-header" data-user-id="${post.user.id}">
-              <img src="${post.user.imageUrl}" class="post-header__user-image">
-              <p class="post-header__user-name">${post.user.name}</p>
-          </div>
           <div class="post-image-container">
             <img class="post-image" src="${post.imageUrl}">
           </div>
@@ -42,9 +44,13 @@ export function renderPostsPageComponent({ appEl }) {
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
+                <div class="posts-user-header">
+                  ${postsUserHeaderHtml}
+                </div>
                 <ul class="posts">
                   ${postsHtml}
                 </ul>
+              <br>
               </div>`;
 
   appEl.innerHTML = appHtml;
