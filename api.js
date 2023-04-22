@@ -24,6 +24,28 @@ export function getPosts({ token }) {
     });
 }
 
+export function addLike({ token, postId }) {
+  return fetch(postsHost + `/${postId}/like`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
+}
+
+export function deleteLike({ token, postId }) {
+  return fetch(postsHost + `/${postId}/dislike`, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+  }).then((response) => {
+    return response.json();
+  });
+}
+
 export function getUserPosts({ token, userId }) {
   return fetch(`${postsHost}/user-posts/${userId}`, {
     method: "GET",

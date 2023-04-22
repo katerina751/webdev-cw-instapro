@@ -122,19 +122,19 @@ const renderApp = () => {
 
   if (page === ADD_POSTS_PAGE) {
     return renderAddPostPageComponent({
-      appEl,
+      appEl, posts
     });
   }
 
   if (page === POSTS_PAGE) {
     return renderPostsPageComponent({
-      appEl,
+      appEl, posts
     });
   }
 
   if (page === USER_POSTS_PAGE) {
     return renderUserPostsPageComponent({
-      appEl
+      appEl, posts
     })
   }
 };

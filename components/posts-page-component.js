@@ -1,15 +1,18 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { posts, goToPage } from "../index.js";
+import { goToPage, getToken } from "../index.js";
+import { addLike, deleteLike } from "../api.js";
+import { user } from "../index.js"
 
-export function renderPostsPageComponent({ appEl }) {
+export function renderPostsPageComponent({ appEl, posts }) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
 
-  const postsHtml = posts.map((post) => {
+  const postsHtml = posts.map((post, index) => {
+    console.log(post.likes);
     return `
-        <li class="post">
+        <li class="post" data-index=${index}>
           <div class="post-header" data-user-id="${post.user.id}">
               <img src="${post.user.imageUrl}" class="post-header__user-image">
               <p class="post-header__user-name">${post.user.name}</p>
@@ -18,11 +21,11 @@ export function renderPostsPageComponent({ appEl }) {
             <img class="post-image" src="${post.imageUrl}">
           </div>
           <div class="post-likes">
-            <button data-post-id="${post.likes.id}" class="like-button">
+            <button data-post-id="${post.id}" class="like-button">
             ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
             </button>
             <p class="post-likes-text">
-              Нравится: <strong> ${post.likes.length > 1 ? post.likes.map((like)=>{return like.name}).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like)=>{return like.name}).pop() : "0"}</strong>
+              Нравится: <strong> ${post.likes.length > 1 ? post.likes.map((like) => { return like.name }).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like) => { return like.name }).pop() : "0"}</strong>
             </p>
           </div>
           <p class="post-text">
@@ -60,4 +63,55 @@ export function renderPostsPageComponent({ appEl }) {
       });
     });
   }
+
+
+  // оживляем лайки
+
+  //Likes
+  const buttonLikeElements = document.querySelectorAll(".like-button");
+  for (let buttonLikeElement of buttonLikeElements) {
+    buttonLikeElement.addEventListener("click", () => {
+      const postId = buttonLikeElement.dataset.postId;
+      const index = buttonLikeElement.closest(".post").dataset.index;
+
+      if (user && posts[index].isLiked === false) {
+        addLike({
+          token: getToken(),
+          postId: postId,
+        }).catch(() => {
+          posts[index].isLiked = false;
+          posts[index].likes.pop();
+          renderPostsPageComponent({ appEl, posts });
+        });
+        posts[index].isLiked = true;
+        posts[index].likes.push({
+          id: user.id,
+          name: user.name,
+        });
+        renderPostsPageComponent({ appEl, posts });
+      } else if (user && posts[index].isLiked === true) {
+        deleteLike({
+          token: getToken(),
+          postId: postId,
+        }).catch(() => {
+          posts[index].isLiked = true;
+          posts[index].likes.push({
+            id: user.id,
+            name: user.name,
+          });
+        });
+        posts[index].isLiked = false;
+        posts[index].likes.pop();
+        renderPostsPageComponent({ appEl, posts });
+      }
+    });
+
+
+
+
+  }
+
+
+
+
 }
