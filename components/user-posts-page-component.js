@@ -22,7 +22,7 @@ export function renderUserPostsPageComponent({ appEl }) {
             <img class="post-image" src="${post.imageUrl}">
           </div>
           <div class="post-likes">
-            <button data-post-id="${post.likes.id}" class="like-button">
+            <button data-post-id="${post.id}" class="like-button">
             ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
             </button>
             <p class="post-likes-text">
@@ -61,13 +61,13 @@ export function renderUserPostsPageComponent({ appEl }) {
     element: document.querySelector(".header-container"),
   });
 
-  for (let userEl of document.querySelectorAll(".post-header")) {
-    userEl.addEventListener("click", () => {
-      goToPage(POSTS_PAGE, {
-        userId: userEl.dataset.userId,
-      });
-    });
-  }
+  // for (let user of document.querySelectorAll(".post-user-header")) {
+  //   user.addEventListener("click", () => {
+  //     goToPage(POSTS_PAGE, {
+  //       userId: user.dataset.userId,
+  //     });
+  //   });
+  // }
 
 
   // оживляем лайки
