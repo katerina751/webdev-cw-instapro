@@ -49,7 +49,9 @@ export function renderAddPostPageComponent({ appEl }) {
 
     document.getElementById("add-button").addEventListener("click", () => {
       const postDescription =
-        document.getElementById("description-input").value;
+        document.getElementById("description-input").value
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
 
       if (!imageUrl) {
         alert("Не выбрана фотография");
