@@ -1,18 +1,23 @@
-import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
-import { goToPage, getToken } from "../index.js";
+import { posts, getToken } from "../index.js";
 import { addLike, deleteLike } from "../api.js";
 import { user } from "../index.js"
 
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 
-export function renderPostsPageComponent({ appEl, posts }) {
+export function renderUserPostsPageComponent({ appEl }) {
   // TODO: реализовать рендер постов из api
   console.log("Актуальный список постов:", posts);
 
+
+  const postsUserHeaderHtml = posts.map((post) => {
+    return `
+              <img src="${post.user.imageUrl}" class="posts-user-header__user-image">
+              <p class="posts-user-header__user-name">${post.user.name}</p>`;
+  }).pop();
+
   const postsHtml = posts.map((post, index) => {
-    console.log(post.likes);
     const likesDescription = () => {
       if (post.likes.length > 1) {
         post.likes.map((like) => { return like.name }).pop() + " и еще " + (post.likes.length - 1);
@@ -22,10 +27,6 @@ export function renderPostsPageComponent({ appEl, posts }) {
     }
     return `
         <li class="post" data-index=${index}>
-          <div class="post-header" data-user-id="${post.user.id}">
-              <img src="${post.user.imageUrl}" class="post-header__user-image">
-              <p class="post-header__user-name">${post.user.name}</p>
-          </div>
           <div class="post-image-container">
             <img class="post-image" src="${post.imageUrl}">
           </div>
@@ -34,7 +35,7 @@ export function renderPostsPageComponent({ appEl, posts }) {
             ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
             </button>
             <p class="post-likes-text">
-              Нравится: <strong> ${likesDescription}}</strong>
+              Нравится: <strong> ${likesDescription}).pop() : "0"}</strong>
             </p>
           </div>
           <p class="post-text">
@@ -42,10 +43,10 @@ export function renderPostsPageComponent({ appEl, posts }) {
             ${post.description}
           </p>
           <p class="post-date">
-                ${formatDistanceToNow(new Date(post.createdAt), {
-                  locale: ru,
-                  addSuffix: true,
-                })}
+            ${formatDistanceToNow(new Date(post.createdAt), {
+              locale: ru,
+              addSuffix: true,
+            })}
           </p>
         </li>`;
   })
@@ -57,9 +58,13 @@ export function renderPostsPageComponent({ appEl, posts }) {
   const appHtml = `
               <div class="page-container">
                 <div class="header-container"></div>
+                <div class="posts-user-header">
+                  ${postsUserHeaderHtml}
+                </div>
                 <ul class="posts">
                   ${postsHtml}
                 </ul>
+              <br>
               </div>`;
 
   appEl.innerHTML = appHtml;
@@ -67,14 +72,6 @@ export function renderPostsPageComponent({ appEl, posts }) {
   renderHeaderComponent({
     element: document.querySelector(".header-container"),
   });
-
-  for (let userEl of document.querySelectorAll(".post-header")) {
-    userEl.addEventListener("click", () => {
-      goToPage(USER_POSTS_PAGE, {
-        userId: userEl.dataset.userId,
-      });
-    });
-  }
 
 
   // оживляем лайки
@@ -93,14 +90,14 @@ export function renderPostsPageComponent({ appEl, posts }) {
         }).catch(() => {
           posts[index].isLiked = false;
           posts[index].likes.pop();
-          renderPostsPageComponent({ appEl, posts });
+          renderUserPostsPageComponent({ appEl, posts });
         });
         posts[index].isLiked = true;
         posts[index].likes.push({
           id: user.id,
           name: user.name,
         });
-        renderPostsPageComponent({ appEl, posts });
+        renderUserPostsPageComponent({ appEl, posts });
       } else if (user && posts[index].isLiked === true) {
         deleteLike({
           token: getToken(),
@@ -114,16 +111,10 @@ export function renderPostsPageComponent({ appEl, posts }) {
         });
         posts[index].isLiked = false;
         posts[index].likes.pop();
-        renderPostsPageComponent({ appEl, posts });
+        renderUserPostsPageComponent({ appEl, posts });
       }
     });
 
-
-
-
   }
-
-
-
 
 }
