@@ -18,6 +18,13 @@ export function renderUserPostsPageComponent({ appEl }) {
   }).pop();
 
   const postsHtml = posts.map((post, index) => {
+    const likesDescription = () => {
+      if (post.likes.length > 1) {
+        post.likes.map((like) => { return like.name }).pop() + " и еще " + (post.likes.length - 1);
+      } else if (post.likes.length == 1) {
+        post.likes.map((like) => { return like.name }).pop();
+      } else `0`;
+    }
     return `
         <li class="post" data-index=${index}>
           <div class="post-image-container">
@@ -28,7 +35,7 @@ export function renderUserPostsPageComponent({ appEl }) {
             ${post.isLiked ? `<img src="./assets/images/like-active.svg">` : `<img src="./assets/images/like-not-active.svg">`}
             </button>
             <p class="post-likes-text">
-              Нравится: <strong> ${post.likes.length > 1 ? post.likes.map((like) => { return like.name }).pop() + " и еще " + (post.likes.length - 1) : post.likes.length == 1 ? post.likes.map((like) => { return like.name }).pop() : "0"}</strong>
+              Нравится: <strong> ${likesDescription}).pop() : "0"}</strong>
             </p>
           </div>
           <p class="post-text">
